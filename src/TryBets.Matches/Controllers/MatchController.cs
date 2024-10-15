@@ -13,9 +13,23 @@ public class MatchController : Controller
         _repository = repository;
     }
 
-    [HttpGet("{MatchFinished}")]
-    public IActionResult Get(bool MatchFinished)
+    [HttpGet("{matchFinished}")]
+    public IActionResult Get(bool matchFinished)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var matches = _repository.Get(matchFinished);
+            
+            if (matches == null || !matches.Any())
+            {
+                return NotFound("No matches found.");
+            }
+
+            return Ok(matches);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 }
